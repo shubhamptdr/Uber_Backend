@@ -1,14 +1,18 @@
 package com.uber.uber.models;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Bean;
+
+import javax.persistence.*;
 
 
 @Entity
 @Table(name = "cab")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public

@@ -1,10 +1,11 @@
 package com.uber.uber.models;
 
 import com.uber.uber.enums.TripStatus;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 
 @Entity
