@@ -1,5 +1,6 @@
 package com.uber.uber.controllers;
 
+import com.uber.uber.EntryDtos.DriverEntityDto;
 import com.uber.uber.services.impl.DriverServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,8 @@ public class DriverController {
 	DriverServiceImpl driverServiceImpl;
 
 	@PostMapping(value = "/register")
-	public ResponseEntity<String> registerDriver(@RequestParam String mobile, @RequestParam String password){
-		String response = driverServiceImpl.register(mobile,password);
+	public ResponseEntity<String> registerDriver(@RequestBody DriverEntityDto driverEntityDto){
+		String response = driverServiceImpl.register(driverEntityDto);
 		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 

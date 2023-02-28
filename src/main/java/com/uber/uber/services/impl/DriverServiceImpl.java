@@ -1,5 +1,6 @@
 package com.uber.uber.services.impl;
 
+import com.uber.uber.EntryDtos.DriverEntityDto;
 import com.uber.uber.enums.TripStatus;
 import com.uber.uber.models.Cab;
 import com.uber.uber.models.Driver;
@@ -22,12 +23,12 @@ public class DriverServiceImpl implements DriverService {
     CabRepository cabRepository3;
 
     @Override
-    public String register(String mobile, String password){
+    public String register(DriverEntityDto driverEntityDto){
         //Save a driver in the database having given details and a cab with ratePerKm as 10 and availability as True by default.
         // create parent entity
         Driver driver = Driver.builder()
-                .mobile(mobile)
-                .password(password)
+                .mobile(driverEntityDto.getMobile())
+                .password(driverEntityDto.getPassword())
                 .build();
 
         // create child entity
