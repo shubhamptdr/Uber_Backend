@@ -2,15 +2,16 @@ package com.uber.uber.services;
 
 
 
+import com.uber.uber.EntryDtos.CustomerEntryDto;
 import com.uber.uber.models.Customer;
 import com.uber.uber.models.TripBooking;
 
 
 public interface CustomerService {
 
-	public void register(Customer customer);
+	public String register(CustomerEntryDto customerEntryDto);
 
-	public void deleteCustomer(Integer customerId);
+	public String deleteCustomer(Integer customerId) throws Exception;
 	
 	public TripBooking bookTrip(int customerId, String fromLocation, String toLocation, int distanceInKm) throws Exception;
 	

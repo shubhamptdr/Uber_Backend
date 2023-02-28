@@ -3,9 +3,7 @@ package com.uber.uber.services;
 import com.uber.uber.EntryDtos.AdminEntryDto;
 import com.uber.uber.ResponseDtos.CustomerResponseDto;
 import com.uber.uber.ResponseDtos.DriverResponseDto;
-import com.uber.uber.models.Admin;
-import com.uber.uber.models.Customer;
-import com.uber.uber.models.Driver;
+
 
 import java.util.List;
 

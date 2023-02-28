@@ -1,5 +1,6 @@
 package com.uber.uber.services.impl;
 
+import com.uber.uber.EntryDtos.CustomerEntryDto;
 import com.uber.uber.enums.TripStatus;
 import com.uber.uber.models.Customer;
 import com.uber.uber.models.Driver;
@@ -26,15 +27,27 @@ public class CustomerServiceImpl implements CustomerService {
     TripBookingRepository tripBookingRepository2;
 
     @Override
-    public void register(Customer customer) {
+    public String register(CustomerEntryDto customerEntryDto) {
+        // crete entity
+        Customer customer = Customer.builder()
+                .name(customerEntryDto.getName())
+                .mobile(customerEntryDto.getMobile())
+                .password(customerEntryDto.getPassword())
+                .build();
+
         //Save the customer in database
         customerRepository2.save(customer);
+
+        return "Customer added successfully";
     }
 
     @Override
-    public void deleteCustomer(Integer customerId) {
+    public String deleteCustomer(Integer customerId) throws Exception {
         // Delete customer without using deleteById function
         Customer customer = customerRepository2.findById(customerId).get();
+        if (customer == null){
+            throw new Exception("Enter wrong customerId");
+        }
         List<TripBooking> tripBookingList = customer.getTripBookingList();
 
         for(TripBooking tripBooking : tripBookingList){
@@ -44,6 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customerRepository2.delete(customer);
 
+        return "Customer added successfully";
     }
 
     @Override

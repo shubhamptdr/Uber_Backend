@@ -1,5 +1,6 @@
 package com.uber.uber.controllers;
 
+import com.uber.uber.EntryDtos.CustomerEntryDto;
 import com.uber.uber.models.Customer;
 import com.uber.uber.models.TripBooking;
 import com.uber.uber.services.CustomerService;
@@ -14,14 +15,23 @@ public class CustomerController {
 	@Autowired
 	CustomerService customerService;
 	@PostMapping("/register")
-	public ResponseEntity<Void> registerCustomer(@RequestBody Customer customer){
-		customerService.register(customer);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<String> registerCustomer(@RequestBody CustomerEntryDto customerEntryDto){
+
+		String response = customerService.register(customerEntryDto);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
 	}
 
 	@DeleteMapping("/delete")
-	public void deleteCustomer(@RequestParam Integer customerId){
-		customerService.deleteCustomer(customerId);
+	public ResponseEntity<String> deleteCustomer(@RequestParam Integer customerId){
+
+		try {
+			String response = customerService.deleteCustomer(customerId);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		}catch (Exception e){
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PostMapping("/bookTrip")

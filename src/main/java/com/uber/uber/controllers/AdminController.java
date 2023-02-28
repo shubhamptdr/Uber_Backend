@@ -4,9 +4,7 @@ package com.uber.uber.controllers;
 import com.uber.uber.EntryDtos.AdminEntryDto;
 import com.uber.uber.ResponseDtos.CustomerResponseDto;
 import com.uber.uber.ResponseDtos.DriverResponseDto;
-import com.uber.uber.models.Admin;
-import com.uber.uber.models.Customer;
-import com.uber.uber.models.Driver;
+
 import com.uber.uber.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
