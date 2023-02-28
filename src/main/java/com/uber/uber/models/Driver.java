@@ -27,13 +27,11 @@ class Driver{
     private String password;
 
     // parent wrt to cab
-    @OneToOne
-    @JoinColumn
+    @OneToOne(mappedBy = "driver",cascade = CascadeType.ALL)
     private Cab cab;
 
     // parent wrt to tripBooking
     @OneToMany(mappedBy = "driver",cascade = CascadeType.ALL)
     private List<TripBooking> tripBookingList = new ArrayList<>();
-
 
 }

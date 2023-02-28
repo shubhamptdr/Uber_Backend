@@ -1,6 +1,6 @@
 package com.uber.uber.controllers;
 
-import com.uber.uber.services.DriverService;
+import com.uber.uber.services.impl.DriverServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,21 +12,25 @@ import org.springframework.web.bind.annotation.*;
 public class DriverController {
 
 	@Autowired
-	DriverService driverService;
+	DriverServiceImpl driverServiceImpl;
 
 	@PostMapping(value = "/register")
-	public ResponseEntity<Void> registerDriver(@RequestParam String mobile, @RequestParam String password){
-		driverService.register(mobile,password);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<String> registerDriver(@RequestParam String mobile, @RequestParam String password){
+		String response = driverServiceImpl.register(mobile,password);
+		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/delete")
-	public void deleteDriver(@RequestParam Integer driverId){
-		driverService.removeDriver(driverId);
+	public ResponseEntity<String> deleteDriver(@RequestParam Integer driverId){
+
+		String response = driverServiceImpl.removeDriver(driverId);
+		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 
 	@PutMapping("/status")
-	public void updateStatus(@RequestParam Integer driverId){
-		driverService.updateStatus(driverId);
+	public ResponseEntity<String> updateStatus(@RequestParam Integer driverId){
+
+		String response = driverServiceImpl.updateStatus(driverId);
+		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 }

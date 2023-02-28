@@ -26,8 +26,9 @@ class Cab{
 
     private boolean available;
 
-    // parent wrt to driver
-    @OneToOne(mappedBy = "cab",cascade = CascadeType.ALL)
+    // child wrt to driver
+    @OneToOne
+    @JoinColumn
     private Driver driver;
 
 }
