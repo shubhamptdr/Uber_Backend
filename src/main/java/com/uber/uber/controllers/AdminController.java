@@ -1,6 +1,9 @@
 package com.uber.uber.controllers;
 
 
+import com.uber.uber.EntryDtos.AdminEntryDto;
+import com.uber.uber.ResponseDtos.CustomerResponseDto;
+import com.uber.uber.ResponseDtos.DriverResponseDto;
 import com.uber.uber.models.Admin;
 import com.uber.uber.models.Customer;
 import com.uber.uber.models.Driver;
@@ -20,31 +23,44 @@ public class AdminController {
 	AdminService adminService;
 
 	@PostMapping("/register")
-	public ResponseEntity<Void> registerAdmin(@RequestBody Admin admin){
-		adminService.adminRegister(admin);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<String> registerAdmin(@RequestBody AdminEntryDto adminEntryDto){
+		String response = adminService.adminRegister(adminEntryDto);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Admin> updateAdminPassword(@RequestParam Integer adminId, @RequestParam String password){
-		Admin updatedAdmin = adminService.updatePassword(adminId,password);
-		return new ResponseEntity<>(updatedAdmin, HttpStatus.OK);
+	public ResponseEntity<String> updateAdminPassword(@RequestParam Integer adminId, @RequestParam String password) throws Exception{
+		try {
+
+			String response = adminService.updatePassword(adminId,password);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		}catch (Exception e){
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@DeleteMapping("/delete")
-	public void deleteAdmin(@RequestParam Integer adminId){
-		adminService.deleteAdmin(adminId);
+	public ResponseEntity<String> deleteAdmin(@RequestParam Integer adminId){
+		try {
+
+			String response = adminService.deleteAdmin(adminId);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		}catch (Exception e){
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping("/listOfCustomers")
-	public List<Customer> listOfCustomers() {
-		List<Customer> listOfCustomers = adminService.getListOfCustomers();
+	public List<CustomerResponseDto> listOfCustomers() {
+		List<CustomerResponseDto> listOfCustomers = adminService.getListOfCustomers();
 		return listOfCustomers;
 	}
 
 	@GetMapping("/listOfDrivers")
-	public List<Driver> listOfDrivers() {
-		List<Driver> listOfDrivers = adminService.getListOfDrivers();
+	public List<DriverResponseDto> listOfDrivers() {
+		List<DriverResponseDto> listOfDrivers = adminService.getListOfDrivers();
 		return listOfDrivers;
 	}
 }
