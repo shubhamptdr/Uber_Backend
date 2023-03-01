@@ -1,6 +1,8 @@
 package com.uber.uber.services.impl;
 
 import com.uber.uber.EntryDtos.DriverEntityDto;
+import com.uber.uber.ResponseDtos.TripBookingResponseDto;
+import com.uber.uber.convertors.DriverConvertor;
 import com.uber.uber.enums.TripStatus;
 import com.uber.uber.models.Cab;
 import com.uber.uber.models.Driver;
@@ -11,6 +13,7 @@ import com.uber.uber.services.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,5 +77,20 @@ public class DriverServiceImpl implements DriverService {
 
         driverRepository3.save(driver);
         return "Driver status updated  to engaged successfully";
+    }
+
+    @Override
+    public List<TripBookingResponseDto> getTripBookingListByDriverId(int driverId) {
+        Driver driver = driverRepository3.findById(driverId).get();
+
+        List<TripBooking> tripBookingList = driver.getTripBookingList();
+        List<TripBookingResponseDto> tripBookingResponseDtoList = new ArrayList<>();
+
+        for ( TripBooking tripBooking : tripBookingList){
+            TripBookingResponseDto tripBookingResponseDto = DriverConvertor.ConvertorTripBookingEntityToDto(tripBooking);
+            tripBookingResponseDtoList.add(tripBookingResponseDto);
+        }
+
+        return tripBookingResponseDtoList;
     }
 }

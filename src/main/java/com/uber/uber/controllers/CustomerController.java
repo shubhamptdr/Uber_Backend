@@ -1,6 +1,8 @@
 package com.uber.uber.controllers;
 
+import com.uber.uber.EntryDtos.BookTripEntryDto;
 import com.uber.uber.EntryDtos.CustomerEntryDto;
+import com.uber.uber.ResponseDtos.TripBookingResponseDto;
 import com.uber.uber.models.Customer;
 import com.uber.uber.models.TripBooking;
 import com.uber.uber.services.CustomerService;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
@@ -35,9 +39,14 @@ public class CustomerController {
 	}
 
 	@PostMapping("/bookTrip")
-	public ResponseEntity<Integer> bookTrip(@RequestParam Integer customerId, @RequestParam String fromLocation, @RequestParam String toLocation, @RequestParam Integer distanceInKm) throws Exception {
-		TripBooking bookedTrip = customerService.bookTrip(customerId,fromLocation,toLocation,distanceInKm);
-		return new ResponseEntity<>(bookedTrip.getTripBookingId(), HttpStatus.CREATED);
+	public ResponseEntity<String> bookTrip(@RequestBody BookTripEntryDto bookTripEntryDto) throws Exception {
+		try {
+
+		TripBooking bookedTrip = customerService.bookTrip(bookTripEntryDto);
+		return new ResponseEntity<>("tripId: "+bookedTrip.getTripBookingId(), HttpStatus.CREATED);
+		}catch (Exception e){
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CREATED);
+		}
 	}
 
 	@DeleteMapping("/complete")
@@ -48,5 +57,13 @@ public class CustomerController {
 	@DeleteMapping("/cancelTrip")
 	public void cancelTrip(@RequestParam Integer tripId){
 		customerService.cancelTrip(tripId);
+	}
+
+	@GetMapping("/get-trip-bookings")
+	public ResponseEntity<List<TripBookingResponseDto>> getTripBookingListByCustomerId(@RequestParam int customerId){
+
+		List<TripBookingResponseDto> response = customerService.getTripBookingListByCustomerId(customerId);
+		return new ResponseEntity<>(response,HttpStatus.OK);
+
 	}
 }

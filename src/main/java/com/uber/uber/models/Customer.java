@@ -29,7 +29,7 @@ class Customer{
     private String password;
 
     // parent wrt to tripBooking
-    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.PERSIST)
     private List<TripBooking> tripBookingList = new ArrayList<>();
 
 }

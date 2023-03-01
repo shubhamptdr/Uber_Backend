@@ -1,11 +1,14 @@
 package com.uber.uber.controllers;
 
 import com.uber.uber.EntryDtos.DriverEntityDto;
+import com.uber.uber.ResponseDtos.TripBookingResponseDto;
 import com.uber.uber.services.impl.DriverServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -33,5 +36,13 @@ public class DriverController {
 
 		String response = driverServiceImpl.updateStatus(driverId);
 		return new ResponseEntity<>(response,HttpStatus.OK);
+	}
+
+	@GetMapping("/get-trip-bookings")
+	public ResponseEntity<List<TripBookingResponseDto>> getTripBookingListByDriverId(@RequestParam int driverId){
+
+			List<TripBookingResponseDto> response = driverServiceImpl.getTripBookingListByDriverId(driverId);
+			return new ResponseEntity<>(response,HttpStatus.OK);
+
 	}
 }

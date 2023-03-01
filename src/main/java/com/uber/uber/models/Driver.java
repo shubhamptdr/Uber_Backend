@@ -31,7 +31,7 @@ class Driver{
     private Cab cab;
 
     // parent wrt to tripBooking
-    @OneToMany(mappedBy = "driver",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "driver",cascade = CascadeType.PERSIST)
     private List<TripBooking> tripBookingList = new ArrayList<>();
 
 }

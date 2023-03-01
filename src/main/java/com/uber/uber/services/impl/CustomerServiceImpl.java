@@ -1,6 +1,9 @@
 package com.uber.uber.services.impl;
 
+import com.uber.uber.EntryDtos.BookTripEntryDto;
 import com.uber.uber.EntryDtos.CustomerEntryDto;
+import com.uber.uber.ResponseDtos.TripBookingResponseDto;
+import com.uber.uber.convertors.DriverConvertor;
 import com.uber.uber.enums.TripStatus;
 import com.uber.uber.models.Customer;
 import com.uber.uber.models.Driver;
@@ -12,6 +15,7 @@ import com.uber.uber.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,15 +65,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public TripBooking bookTrip(int customerId, String fromLocation, String toLocation, int distanceInKm) throws Exception{
+    public TripBooking bookTrip(BookTripEntryDto bookTripEntryDto) throws Exception{
         //Book the driver with lowest driverId who is free (cab available variable is Boolean.TRUE). If no driver is available, throw "No cab available!" exception
         //Avoid using SQL query
-        TripBooking tripBooking = new TripBooking();
         Driver availableDriver = null;
         List<Driver> driverList = driverRepository2.findAll();
 
         for(Driver driver : driverList){
-            if(driver.getCab().isAvailable() == true){
+            if(driver.getCab().isAvailable()){
                 if((availableDriver == null) || (availableDriver.getDriverId() > driver.getDriverId())){
                     availableDriver = driver;
                 }
@@ -79,25 +82,34 @@ public class CustomerServiceImpl implements CustomerService {
         if(availableDriver == null){
             throw new Exception("No cab available!");
         }
+        // fetch Customer Entity
+        Customer customer = customerRepository2.findById(bookTripEntryDto.getCustomerId()).get();
 
-        Customer customer = customerRepository2.findById(customerId).get();
-        tripBooking.setCustomer(customer);
-        tripBooking.setDriver(availableDriver);
-        tripBooking.setStatus(TripStatus.CONFIRMED);
-        tripBooking.setFromLocation(fromLocation);
-        tripBooking.setToLocation(toLocation);
+        if(customer == null){
+            throw new Exception("Enter wrong customerID!");
+        }
+
+        // create TripBook entity and setting its attribute
+
+        TripBooking tripBooking = TripBooking.builder()
+                .driver(availableDriver)
+                .customer(customer)
+                .fromLocation(bookTripEntryDto.getFromLocation())
+                .toLocation(bookTripEntryDto.getToLocation())
+                .distanceInKm(bookTripEntryDto.getDistanceInKm())
+                .status(TripStatus.CONFIRMED)
+                .bill(availableDriver.getCab().getPerKmRate() * bookTripEntryDto.getDistanceInKm())
+                .build();
+
         availableDriver.getCab().setAvailable(false);
-        tripBooking.setDistanceInKm(distanceInKm);
 
-        int rate = availableDriver.getCab().getPerKmRate();
-        tripBooking.setBill(distanceInKm * rate);
+//        customer.getTripBookingList().add(tripBooking);
+//        availableDriver.getTripBookingList().add(tripBooking);
+//        customerRepository2.save(customer);
+////
+//        driverRepository2.save(availableDriver);
 
-        customer.getTripBookingList().add(tripBooking);
-        customerRepository2.save(customer);
-
-        availableDriver.getTripBookingList().add(tripBooking);
-        driverRepository2.save(availableDriver);
-
+            tripBookingRepository2.save(tripBooking);
         return tripBooking;
     }
 
@@ -121,5 +133,20 @@ public class CustomerServiceImpl implements CustomerService {
         tripBooking.setBill(tripBooking.getDistanceInKm() * driver.getCab().getPerKmRate());
         tripBooking.getDriver().getCab().setAvailable(true);
         tripBookingRepository2.save(tripBooking);
+    }
+
+    @Override
+    public List<TripBookingResponseDto> getTripBookingListByCustomerId(int customerId) {
+        Customer customer = customerRepository2.findById(customerId).get();
+
+        List<TripBooking> tripBookingList = customer.getTripBookingList();
+        List<TripBookingResponseDto> tripBookingResponseDtoList = new ArrayList<>();
+
+        for ( TripBooking tripBooking : tripBookingList){
+            TripBookingResponseDto tripBookingResponseDto = DriverConvertor.ConvertorTripBookingEntityToDto(tripBooking);
+            tripBookingResponseDtoList.add(tripBookingResponseDto);
+        }
+
+        return tripBookingResponseDtoList;
     }
 }

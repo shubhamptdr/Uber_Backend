@@ -2,6 +2,7 @@ package com.uber.uber.models;
 
 import com.uber.uber.enums.TripStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "trip_booking")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public
